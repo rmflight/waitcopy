@@ -49,6 +49,10 @@ Given a file to copy, and a location to copy it to, does a few things:
   in the master json file.
 * if a matching file name is found but with a different MD5 hash, append the
   first 8 digits of the MD5 hash to the file name, and add it to the json data
+  
+## Installation
+
+`devtools::install_github("rmflight/waitcopy")`
 
 
 ## Example Metadata - List of Files
