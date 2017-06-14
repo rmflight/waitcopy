@@ -8,22 +8,25 @@ create_in_temp <- function(dir_loc) {
 }
 erase <- function(path) unlink(path, recursive = TRUE)
 
+source_dir <- create_in_temp("source")
+target_dir <- create_in_temp("target")
+target_dir2 <- create_in_temp("target2")
+tmp_dir <- create_in_temp("temp")
+on.exit({
+  erase(file.path(source_dir, "set1"));
+  erase(file.path(source_dir, "set2"));
+  erase(file.path(source_dir, "set3"))
+  erase(file.path(target_dir));
+  erase(file.path(target_dir2));
+  erase(file.path(tmp_dir))
+})
+
+data("iris")
+
 test_that("copying with duplicates works", {
-  source_dir <- create_in_temp("source")
-  target_dir <- create_in_temp("target")
-  tmp_dir <- create_in_temp("temp")
-  on.exit({
-    erase(file.path(source_dir, "set1"));
-    erase(file.path(source_dir, "set2"));
-    erase(file.path(target_dir));
-    erase(file.path(tmp_dir))
-    })
 
   # create some data to work with
   dir.create(file.path(source_dir, "set1"))
-
-  data("iris")
-
   # two completely different files
   dput(iris[, -1], file = file.path(source_dir, "set1", "file1.raw"))
   dput(iris[, -3], file = file.path(source_dir, "set1", "file2.raw"))
@@ -67,4 +70,11 @@ test_that("copying with duplicates works", {
   expect_length(json_metadata2, 6)
   expect_length(json_metadata2[[1]]$original_path, 3)
 
+})
+
+test_that("timings work", {
+  dir.create(file.path(source_dir, "set_timing"))
+  dput(iris[-1, ], file = file.path(source_dir, "set_timing", "file1_timing.raw"))
+
+  curr_time <- now()
 })
