@@ -7,9 +7,8 @@
 #' @param replace_special what to use to replace anything besides dot
 #'
 #' @details This function creates a new file name that is stripped of special
-#' characters. The following characters are replaced by a period: " ", "_", ":",
-#'   "'", "/". "./" is stripped from any paths (will occur if using \emph{find}),
-#'   and leading "~" are stripped.
+#' characters. The following characters are replaced by a period: " ", ":", "~",
+#' "'". A leading "~" will be replaced by space.
 #'
 #' @import magrittr
 #'
@@ -21,7 +20,6 @@ rename_file <- function(in_file, replace_special = "-"){
 
   file_name <- basename(use_file) %>%
     gsub(" ", replace_special, ., fixed = TRUE) %>%
-    gsub("_", replace_special, ., fixed = TRUE) %>%
     gsub(":", replace_special, ., fixed = TRUE) %>%
     gsub("^~", "", .) %>%
     gsub("~", replace_special, ., fixed = TRUE) %>%
@@ -184,11 +182,22 @@ save_json <- function(list_data, save_loc){
 #' @param pause_wait how long to pause when the wait limit is reached
 #' @param pause_file how long to pause between every file
 #'
-#' @details The \code{start_time} and \code{stop_time} are assumed to be on a
-#'   per day basis, so they should be encoded as the number of hours from midnight
-#'   of today. The function actually does a periodic check as to whether the
-#'   \code{start_time} is ahead of it, and if it is not, then it will create
-#'   a new time interval for the copying to be allowed.
+#' @details
+#' 1. **Limiting by time of day**: if `time_limit = TRUE`, the `start_time` and
+#'   `stop_time` are assumed to be on a
+#'   per day basis, so they should be encoded as the number of hours from midnight.
+#'   The function actually does a periodic check as to whether the
+#'   `start_time` is ahead of it, and if it is not, then it will create
+#'   a new time interval for the copying to be allowed. Default is from 8pm (20:00)
+#'   to 6am (30:00). The `wait_check` parameter sets how often to wait before checking
+#'   the time again (default is 1800 seconds / 30 minutes), and `n_check` parameter
+#'   defines how many times to check if the copying can be done (defaults to infinite).
+#' 1. **Time Zone**: Provide your time zone so that the time functionality works
+#'   properly!
+#' 1. **Waiting Between Copies**: In addition to only copying between certain hours,
+#'   it is possible to set how long to pause between each file using `pause_file`,
+#'   default is 2 seconds, and also a longer interval after copying several files
+#'   using `wait_files` (10 files) and `pause_wait` (10 seconds).
 #'
 #' @import lubridate
 #' @importFrom jsonlite fromJSON
