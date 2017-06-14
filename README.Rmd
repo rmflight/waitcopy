@@ -1,5 +1,7 @@
 # waitcopy
 
+Copy files during particular times of day and with metadata.
+
 ## Description
 
 Provides the function `wait_copy` that:
