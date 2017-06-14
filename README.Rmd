@@ -26,8 +26,8 @@ resource too often by the people who are local to it.
 ### The Solution
 
 So ideally, you want to copy the files only during certain hours, wait a little
-bit between each copy operation, checks for duplicates (via names and md5 hashing),
-strips the file name of special characters, and notes where the file originated.
+bit between each copy operation, check for duplicates (via names and md5 hashing),
+strip the file name of special characters, and note where the file originated.
 
 `waitcopy` provides these capabilities.
 
@@ -46,7 +46,7 @@ Given a file to copy, and a location to copy it to, does a few things:
 * if MD5 is not new, **add** the original file path to the matching file entry
   in the master json file.
 * if a matching file name is found but with a different MD5 hash, append the
-  first 8 digits of the MD5 hash to the file name, and add it to the database.
+  first 8 digits of the MD5 hash to the file name, and add it to the json data
 
 
 ## Example Metadata - List of Files
