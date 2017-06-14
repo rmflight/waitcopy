@@ -1,5 +1,7 @@
 [![Travis-CI Build Status](https://travis-ci.org/rmflight/waitcopy.svg?branch=master)](https://travis-ci.org/rmflight/waitcopy)
 
+[![Coverage Status](https://img.shields.io/codecov/c/github/rmflight/waitcopy/master.svg)](https://codecov.io/github/rmflight/waitcopy?branch=master)
+
 # waitcopy
 
 Copy files during particular times of day and with metadata.
