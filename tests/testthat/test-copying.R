@@ -8,22 +8,17 @@ create_in_temp <- function(dir_loc) {
 }
 erase <- function(path) unlink(path, recursive = TRUE)
 
-source_dir <- create_in_temp("source")
-target_dir <- create_in_temp("target")
-target_dir2 <- create_in_temp("target2")
-tmp_dir <- create_in_temp("temp")
-on.exit({
-  erase(file.path(source_dir, "set1"));
-  erase(file.path(source_dir, "set2"));
-  erase(file.path(source_dir, "set3"))
-  erase(file.path(target_dir));
-  erase(file.path(target_dir2));
-  erase(file.path(tmp_dir))
-})
-
 data("iris")
 
 test_that("copying with duplicates works", {
+  source_dir <- create_in_temp("source")
+  target_dir <- create_in_temp("target")
+  tmp_dir <- create_in_temp("temp")
+  on.exit({
+    erase(file.path(source_dir));
+    erase(file.path(target_dir));
+    erase(file.path(tmp_dir))
+  })
 
   # create some data to work with
   dir.create(file.path(source_dir, "set1"))
@@ -73,8 +68,33 @@ test_that("copying with duplicates works", {
 })
 
 test_that("timings work", {
-  dir.create(file.path(source_dir, "set_timing"))
-  dput(iris[-1, ], file = file.path(source_dir, "set_timing", "file1_timing.raw"))
+  source_dir2 <- create_in_temp("source2")
+  target_dir2 <- create_in_temp("target2")
+  tmp_dir2 <- create_in_temp("temp2")
+  on.exit({
+    erase(file.path(source_dir2));
+    erase(file.path(target_dir2));
+    erase(file.path(tmp_dir2))
+  })
 
-  curr_time <- now()
+  dir.create(file.path(source_dir2, "set_timing"))
+  dput(iris[-1, ], file = file.path(source_dir2, "set_timing", "file1_timing.raw"))
+
+  curr_time <- waitcopy:::get_now_in_local()
+  curr_today <- waitcopy:::get_today_in_local()
+
+  now_minus_today <- difftime(curr_time, curr_today, units = "s")
+  beg_time <- seconds(now_minus_today + 20)
+  end_time <- seconds(now_minus_today + 3600)
+
+  wait_copy(file.path(source_dir2, "set_timing", "file1_timing.raw"),
+            target_dir2, json_meta = file.path(target_dir2, "all_meta_data.json"), tmp_loc = tmp_dir2,
+            start_time = beg_time, stop_time = end_time,
+            wait_check = 8)
+
+  expect_true(file.exists(file.path(target_dir2, "file1_timing.raw")))
+  file_copy_date <- file.mtime(file.path(target_dir2, "file1_timing.raw"))
+  expect_true(difftime(file_copy_date, waitcopy:::get_today_in_local() + beg_time) > 0)
+
+
 })
