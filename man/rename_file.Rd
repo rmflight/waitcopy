@@ -20,7 +20,6 @@ characters
 }
 \details{
 This function creates a new file name that is stripped of special
-characters. The following characters are replaced by a period: " ", "_", ":",
-  "'", "/". "./" is stripped from any paths (will occur if using \emph{find}),
-  and leading "~" are stripped.
+characters. The following characters are replaced by a period: " ", ":", "~",
+"'". A leading "~" will be replaced by space.
 }

@@ -45,9 +45,21 @@ is very useful for copying from networked drives that get a lot of activity
 during the day.
 }
 \details{
-The \code{start_time} and \code{stop_time} are assumed to be on a
-  per day basis, so they should be encoded as the number of hours from midnight
-  of today. The function actually does a periodic check as to whether the
-  \code{start_time} is ahead of it, and if it is not, then it will create
-  a new time interval for the copying to be allowed.
+\enumerate{
+\item \strong{Limiting by time of day}: if \code{time_limit = TRUE}, the \code{start_time} and
+\code{stop_time} are assumed to be on a
+per day basis, so they should be encoded as the number of hours from midnight.
+The function actually does a periodic check as to whether the
+\code{start_time} is ahead of it, and if it is not, then it will create
+a new time interval for the copying to be allowed. Default is from 8pm (20:00)
+to 6am (30:00). The \code{wait_check} parameter sets how often to wait before checking
+the time again (default is 1800 seconds / 30 minutes), and \code{n_check} parameter
+defines how many times to check if the copying can be done (defaults to infinite).
+\item \strong{Time Zone}: Provide your time zone so that the time functionality works
+properly!
+\item \strong{Waiting Between Copies}: In addition to only copying between certain hours,
+it is possible to set how long to pause between each file using \code{pause_file},
+default is 2 seconds, and also a longer interval after copying several files
+using \code{wait_files} (10 files) and \code{pause_wait} (10 seconds).
+}
 }
