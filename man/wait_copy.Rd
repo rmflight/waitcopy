@@ -6,7 +6,7 @@
 \usage{
 wait_copy(file_list, to_dir = ".", json_meta = "all_meta_data.json",
   tmp_loc = "/tmp", time_limit = TRUE, start_time = hours(20),
-  stop_time = hours(30), time_zone = "EST", wait_check = 1800,
+  stop_time = hours(30), time_zone = NULL, wait_check = 1800,
   n_check = Inf, wait_files = 10, pause_wait = 10, pause_file = 2)
 }
 \arguments{
