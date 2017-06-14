@@ -1,0 +1,22 @@
+Package: waitcopy
+Title: Copying files within certain hours and waiting between each one
+Version: 0.0.1
+Authors@R: person(given = c("Robert", "M"), family = c("Flight"),
+ email = "rflight79@gmail.com", role = c("aut", "cre"))
+Description: Provides convenience functions for copying files when there is
+  a need to wait between each one, or only copy files during a particular time
+  of day. Also provides meta-data about where each one was copied from, and
+  md5 checking to make sure duplicate files are not actually copied from the
+  source.
+Depends:
+    R (>= 3.2.0)
+Imports:
+    lubridate
+License: MIT
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1
+Suggests: knitr,
+    rmarkdown,
+    testthat
+VignetteBuilder: knitr

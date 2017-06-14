@@ -1,0 +1,42 @@
+# waitcopy
+
+## How it should work
+
+Given a file to copy, and a location to copy it to, does a few things:
+
+
+* strip special characters and spaces from the file name (if asked)
+* copy the file to a temp location
+* save the original path to the file it was being copied from
+* calculate the MD5 hash of the file
+* check master json data of MD5 hashes and file names
+* if MD5 is new, add the new file name, original file path, and MD5 to the master
+  json file
+* if MD5 is not new, **add** the original file path to the matching file entry
+  in the master json file.
+* if a matching file name is found but with a different MD5 hash, append the
+  first 8 digits of the MD5 hash to the file name, and add it to the database.
+
+
+{
+  "files" : [ 
+    {
+      "file" : "file1",
+      "saved_path" : "local_path/file1",
+      "original_path" : ["path1/file1", "path2/file1"],
+      "md5" : "file1md5hash"
+    },
+    {
+      "file" : "file2",
+      "saved_path" : "local_path/file2",
+      "original_path" : ["path1/file2"],
+      "md5" : "file2md5hash"
+    },
+    {
+      "file" : "file2-md5",
+      "saved_path" : "local_path/file2-md5",
+      "original_path" : ["path3/file2"],
+      "md5" : "file2md5hash2"
+    }
+  ]
+}
