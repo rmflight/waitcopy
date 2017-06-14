@@ -210,7 +210,7 @@ wait_copy <- function(file_list, to_dir = ".",
                                tmp_loc = "/tmp",
                                time_limit = TRUE,
                                start_time = hours(20), stop_time = hours(30),
-                               time_zone = "EST", wait_check = 1800, n_check = Inf,
+                               time_zone = NULL, wait_check = 1800, n_check = Inf,
                                wait_files = 10, pause_wait = 10,
                                pause_file = 2){
 
@@ -233,14 +233,16 @@ wait_copy <- function(file_list, to_dir = ".",
 
 
   if (time_limit) {
-    t_start <- today() + start_time
-    t_stop <- today() + stop_time
+    t_start <- get_today_in_local() + start_time
+    t_stop <- get_today_in_local() + stop_time
   } else {
-    t_start <- today() - days(10)
-    t_stop <- today() + days(10)
+    t_start <- get_today_in_local() - days(10)
+    t_stop <- get_today_in_local() + days(10)
   }
-  tz(t_start) <- time_zone
-  tz(t_stop) <- time_zone
+
+  if (is.null(time_zone)) {
+    time_zone <- get_tz(now())
+  }
   allowed_copy_time <- interval(t_start, t_stop, tz(t_stop))
 
   # check that the top level directory we are copying from and to
@@ -252,9 +254,9 @@ wait_copy <- function(file_list, to_dir = ".",
   i_check <- 0
   did_copy <- 1
   while (did_copy <= to_copy) {
-    now1 <- now()
-    now2 <- now()
-    tmp_int <- interval(now1, now2)
+    now1 <- get_now_in_local()
+    now2 <- get_now_in_local()
+    tmp_int <- interval(now1, now2, tz(t_stop))
     can_copy <- int_overlaps(tmp_int, allowed_copy_time)
 
     if (can_copy) {
@@ -291,3 +293,21 @@ wait_copy <- function(file_list, to_dir = ".",
   save_json(json_data, json_meta)
 }
 
+get_tz <- function(in_time){
+  new_time <- as.POSIXlt(in_time)
+  new_time$zone
+}
+
+get_today_in_local <- function(){
+  use_tz <- waitcopy:::get_tz(now())
+  curr_day <- today() + seconds(1)
+  tz(curr_day) <- use_tz
+  curr_day
+}
+
+get_now_in_local <- function(){
+  use_tz <- waitcopy:::get_tz(now())
+  right_now <- now()
+  tz(right_now) <- use_tz
+  right_now
+}
