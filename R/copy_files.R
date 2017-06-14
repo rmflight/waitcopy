@@ -10,20 +10,18 @@
 #' characters. The following characters are replaced by a period: " ", ":", "~",
 #' "'". A leading "~" will be replaced by space.
 #'
-#' @import magrittr
-#'
 #' @export
 #'
 #' @return character
 rename_file <- function(in_file, replace_special = "-"){
   use_file <- basename(in_file)
 
-  file_name <- basename(use_file) %>%
-    gsub(" ", replace_special, ., fixed = TRUE) %>%
-    gsub(":", replace_special, ., fixed = TRUE) %>%
-    gsub("^~", "", .) %>%
-    gsub("~", replace_special, ., fixed = TRUE) %>%
-    gsub("'", replace_special, ., fixed = TRUE)
+  file_name <- basename(use_file)
+  file_name <- gsub(" ", replace_special, file_name, fixed = TRUE)
+  file_name <- gsub(":", replace_special, file_name, fixed = TRUE)
+  file_name <- gsub("^~", "", file_name)
+  file_name <- gsub("~", replace_special, file_name, fixed = TRUE)
+  file_name <- gsub("'", replace_special, file_name, fixed = TRUE)
 
   file_name
 }
@@ -299,14 +297,14 @@ get_tz <- function(in_time){
 }
 
 get_today_in_local <- function(){
-  use_tz <- waitcopy:::get_tz(now())
+  use_tz <- get_tz(now())
   curr_day <- today() + seconds(1)
   tz(curr_day) <- use_tz
   curr_day
 }
 
 get_now_in_local <- function(){
-  use_tz <- waitcopy:::get_tz(now())
+  use_tz <- get_tz(now())
   right_now <- now()
   tz(right_now) <- use_tz
   right_now
