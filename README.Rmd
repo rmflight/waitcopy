@@ -1,3 +1,5 @@
+[![Travis-CI Build Status](https://travis-ci.org/rmflight/waitcopy.svg?branch=master)](https://travis-ci.org/rmflight/waitcopy)
+
 # waitcopy
 
 Copy files during particular times of day and with metadata.
