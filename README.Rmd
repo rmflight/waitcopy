@@ -4,7 +4,8 @@ output:
     variant: markdown_github
 ---
 
-[![Last-changedate](https://img.shields.io/badge/last%20change-`r gsub('-', '--', Sys.Date())`-brightgreen.svg)](https://github.com/rmflight/waitcopy/commits/master) 
+[![Last-changedate](https://img.shields.io/badge/last%20change-`r gsub('-', '--', Sys.Date())`-brightgreen.svg)](https://github.com/rmflight/waitcopy/commits/master)
+[![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/waitcopy)](https://cran.r-project.org/package=waitcopy)
 [![Travis-CI Build Status](https://travis-ci.org/rmflight/waitcopy.svg?branch=master)](https://travis-ci.org/rmflight/waitcopy)
 [![Coverage Status](https://img.shields.io/codecov/c/github/rmflight/waitcopy/master.svg)](https://codecov.io/github/rmflight/waitcopy?branch=master)
 [![Licence](https://img.shields.io/github/license/mashape/apistatus.svg)](http://choosealicense.com/licenses/mit/) 
