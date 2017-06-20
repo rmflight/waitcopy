@@ -23,3 +23,7 @@ This function creates a new file name that is stripped of special
 characters. The following characters are replaced by a period: " ", ":", "~",
 "'". A leading "~" will be replaced by space.
 }
+\examples{
+clean_filename("badly:formatted~file name(sample1)")
+
+}

@@ -64,5 +64,42 @@ properly!
 it is possible to set how long to pause between each file using \code{pause_file},
 default is 2 seconds, and also a longer interval after copying several files
 using \code{wait_files} (10 files) and \code{pause_wait} (10 seconds).
+\item \strong{Checking for files}: It is recommended before running \code{wait_copy} to
+first run \code{check_files_exist} on the file list to copy to make sure that
+you are passing valid file paths.
+}
+}
+\examples{
+\dontrun{
+  #### Not Run! ####
+  # assume files are in /home/tmp/
+  # assume current working directory is where to copy to
+  file_list <- dir(".", full.names = TRUE)
+  wait_copy(file_list) # copy between 8pm and 6am
+
+  # no time limit for copying
+  wait_copy(file_list, time_limit = FALSE)
+
+  # copy from 10am to 1pm (13:00)
+  wait_copy(file_list, start_time = hours(10), stop_time = hours(13))
+
+  # stop checking if can copy after particular number of checks (3)
+  wait_copy(file_list, n_check = 3)
+
+  # check every 30 seconds instead of 30 minutes
+  wait_copy(file_list, wait_check = 30)
+
+  # pause 4 seconds between each file
+  wait_copy(file_list, pause_file = 4)
+
+  # pause 30 seconds after every 20 files
+  wait_copy(file_list, wait_files = 20, pause_wait = 30)
+
+  # don't rename the files
+  wait_copy(file_list, clean_file_fun = NULL)
+
+  # use make.names instead
+  wait_copy(file_list, clean_file_fun = make.names)
+
 }
 }
