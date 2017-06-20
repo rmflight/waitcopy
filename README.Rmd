@@ -67,30 +67,108 @@ Given a file to copy, and a location to copy it to, does a few things:
 
 `devtools::install_github("rmflight/waitcopy")`
 
+## Example Usage
 
-## Example Metadata - List of Files
+### Worked Example
 
+Lets imagine that we want to copy a set of files during a set time, and one of
+the files is duplicated (but we don't know that before we start).
+
+```{r get_files}
+library(waitcopy)
+library(lubridate)
+# assuming you are in the package directory
+testloc <- file.path(rprojroot::find_root("DESCRIPTION"), "tests", "testthat", "set1")
+
+file_list <- dir(testloc, pattern = "raw", full.names = TRUE)
+file_list
 ```
-{
-  [ 
-    {
-      "file" : "file1",
-      "saved_path" : "local_path/file1",
-      "original_path" : ["path1/file1", "path2/file1"],
-      "md5" : "file1md5hash"
-    },
-    {
-      "file" : "file2",
-      "saved_path" : "local_path/file2",
-      "original_path" : ["path1/file2"],
-      "md5" : "file2md5hash"
-    },
-    {
-      "file" : "file2-md5",
-      "saved_path" : "local_path/file2-md5",
-      "original_path" : ["path3/file2"],
-      "md5" : "file2md5hash2"
-    }
-  ]
-}
+
+We will setup a **temp** directory to copy them to:
+
+```{r temp_directory}
+temp_dir <- tempfile(pattern = "copyfiles-test-1")
+dir.create(temp_dir)
+dir(temp_dir)
 ```
+
+And then lets set up to copy **20s** from now.
+
+```{r set_copy_time}
+curr_time <- waitcopy:::get_now_in_local()
+curr_today <- waitcopy:::get_today_in_local()
+
+now_minus_today <- difftime(curr_time, curr_today, units = "s")
+beg_time <- seconds(now_minus_today + 20)
+end_time <- seconds(now_minus_today + 3600)
+
+beg_time
+end_time
+```
+
+And now let's copy! This is in the **near** future, so we will set the `wait_check`
+parameter to a low value of only 10 seconds, normally this is set to 30 minutes (1800 seconds),
+assuming that it is in the far future when you want to copy the files.
+
+```{r copy_it}
+wait_copy(file_list, temp_dir, json_meta = file.path(temp_dir, "all_meta.json"),
+          start_time = beg_time, stop_time = end_time, wait_check = 10, pause_file = 0)
+```
+
+Lets look at how many files were copied and the contents of the JSON metadata.
+
+```{r copied_files_json}
+copied_files <- dir(temp_dir)
+copied_files
+
+meta_json <- jsonlite::fromJSON(file.path(temp_dir, "all_meta.json"), simplifyVector = FALSE)
+jsonlite::toJSON(meta_json, auto_unbox = TRUE, pretty = TRUE)
+```
+
+### Alternatives (not run)
+
+#### Default
+
+If you just want to copy between 8pm and 6am everyday for however long it will take:
+
+```r
+wait_copy(file_list, temp_dir, json_meta = file.path(temp_dir, "all_meta.json"))
+```
+
+#### Change Start or End Time in Hours
+
+What if the best time to copy files was from 10am until 1pm (13:00)??
+
+```r
+wait_copy(file_list, temp_dir, json_meta = file.path(temp_dir, "all_meta.json"),
+start_time = hours(10), stop_time = hours(13))
+```
+
+#### Don't Set a Time Limit
+
+```r
+wait_copy(file_list, temp_dir, json_meta = file.path(temp_dir, "all_meta.json"),
+time_limit = FALSE)
+```
+
+#### Stop Checking The Time
+
+If you want the function to give up after trying to check the time, then change
+the `n_check` variable. If you wanted to stop checking after 3 tries:
+
+```r
+wait_copy(file_list, temp_dir, json_meta = file.path(temp_dir, "all_meta.json"),
+n_check = 3)
+```
+
+#### Use Different Renaming Function
+
+An alternative way to handle nasty file names would be to use the `make.names` function:
+
+```r
+wait_copy(file_list, temp_dir, json_meta = file.path(temp_dir, "all_meta.json"),
+clean_file_fun = make.names)
+```
+
+Note that this is only applied to the `basename` of the file path, i.e. the actual
+file-name after removing the path in front of the file-name.
