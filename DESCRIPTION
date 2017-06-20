@@ -24,5 +24,6 @@ Roxygen: list(markdown = TRUE)
 Suggests: knitr,
     rmarkdown,
     testthat,
-    covr
+    covr,
+    rprojroot
 VignetteBuilder: knitr
