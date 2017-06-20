@@ -309,3 +309,28 @@ get_now_in_local <- function(){
   tz(right_now) <- use_tz
   right_now
 }
+
+#' check files
+#'
+#' check that requested files to copy actually exist, and warn the user
+#' if any of them fail.
+#'
+#' @param file_list the list of files
+#' @param n_check how many to check that they exist?
+#'
+#' @export
+check_files_exist <- function(file_list, n_check = 10){
+  n_file <- length(file_list)
+
+  if (n_check >= n_file) {
+    n_check <- n_file
+  }
+
+  files_to_check <- sample(file_list, n_check)
+
+  does_exist <- file.exists(files_to_check)
+
+  if (sum(does_exist) != n_check){
+    warning(paste0(sum(!does_exist), " of ", n_check, " files in your file list do not exist!"))
+  }
+}
