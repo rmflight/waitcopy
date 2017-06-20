@@ -1,9 +1,11 @@
 context("copying")
 
 # setup things in a random directory
-create_in_temp <- function(dir_loc) {
+create_in_temp <- function(dir_loc, create_it = TRUE) {
   temp_path <- tempfile(pattern = paste0("copyfiles-test-", dir_loc))
-  dir.create(temp_path)
+  if (create_it) {
+    dir.create(temp_path)
+  }
   temp_path
 }
 erase <- function(path) unlink(path, recursive = TRUE)
@@ -49,7 +51,7 @@ test_that("copying with duplicates works", {
 })
 
 test_that("timings work", {
-  target_dir2 <- create_in_temp("target2")
+  target_dir2 <- create_in_temp("target2", FALSE)
   tmp_dir2 <- create_in_temp("temp2")
   on.exit({
     erase(file.path(target_dir2));
