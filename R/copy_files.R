@@ -1,4 +1,4 @@
-#' rename a file
+#' clean a file name
 #'
 #' given a file to copy, generates a new file name stripped of special
 #' characters
@@ -13,7 +13,7 @@
 #' @export
 #'
 #' @return character
-rename_file <- function(in_file, replace_special = "-"){
+clean_filename <- function(in_file, replace_special = "-"){
   use_file <- basename(in_file)
 
   file_name <- basename(use_file)
@@ -22,6 +22,8 @@ rename_file <- function(in_file, replace_special = "-"){
   file_name <- gsub("^~", "", file_name)
   file_name <- gsub("~", replace_special, file_name, fixed = TRUE)
   file_name <- gsub("'", replace_special, file_name, fixed = TRUE)
+  file_name <- gsub("(", replace_special, file_name, fixed = TRUE)
+  file_name <- gsub(")", replace_special, file_name, fixed = TRUE)
 
   file_name
 }
@@ -34,6 +36,7 @@ rename_file <- function(in_file, replace_special = "-"){
 #' @param to_dir the location to copy the file to
 #' @param json_data the json meta information data
 #' @param tmp_loc temp location if you want to specify it
+#' @param clean_file_fun function used to rename the file
 #'
 #' @details We want to keep track of information about the copied files, so this
 #' function does some stuff to help us out. It strips special characters from
@@ -55,14 +58,15 @@ rename_file <- function(in_file, replace_special = "-"){
 #' @export
 #' @return list
 #'
-copy_file <- function(from_file = NULL, to_dir = ".", json_data = NULL, tmp_loc = "/tmp"){
+copy_file <- function(from_file = NULL, to_dir = ".", json_data = NULL, tmp_loc = "/tmp",
+                      clean_file_fun = clean_filename){
   stopifnot(!is.null(from_file))
 
   to_dir <- normalizePath(to_dir)
 
 
   base_file <- basename(from_file)
-  base_out <- rename_file(base_file)
+  base_out <- clean_file_fun(base_file)
 
   tmp_file <- file.path(tmp_loc, base_out)
 
@@ -167,6 +171,7 @@ save_json <- function(list_data, save_loc){
 #' @param to_dir where to copy the files to
 #' @param json_meta the json meta flat file
 #' @param tmp_loc a temp file location
+#' @param clean_filename should the file name be cleaned up?
 #' @param time_limit only copy during a certain time?
 #' @param start_time when to start copying
 #' @param stop_time when to stop copying
@@ -201,13 +206,14 @@ save_json <- function(list_data, save_loc){
 #' @return logical
 #' @export
 wait_copy <- function(file_list, to_dir = ".",
-                               json_meta = "all_meta_data.json",
-                               tmp_loc = "/tmp",
-                               time_limit = TRUE,
-                               start_time = hours(20), stop_time = hours(30),
-                               time_zone = NULL, wait_check = 1800, n_check = Inf,
-                               wait_files = 10, pause_wait = 10,
-                               pause_file = 2){
+                     json_meta = "all_meta_data.json",
+                     tmp_loc = "/tmp",
+                     clean_file_fun = clean_filename,
+                     time_limit = TRUE,
+                     start_time = hours(20), stop_time = hours(30),
+                     time_zone = NULL, wait_check = 1800, n_check = Inf,
+                     wait_files = 10, pause_wait = 10,
+                     pause_file = 2){
 
   if (!dir.exists(to_dir)) {
     dir.create(to_dir)
@@ -264,7 +270,7 @@ wait_copy <- function(file_list, to_dir = ".",
       # and wait some time after copying a reasonable number of files.
       # Note that we also pause a little bit of time after each copy.
       if (check_wait_counter < wait_files) {
-        json_data <- copy_file(file_list[did_copy], to_dir, json_data, tmp_loc)
+        json_data <- copy_file(file_list[did_copy], to_dir, json_data, tmp_loc, clean_file_fun = clean_filename)
 
         Sys.sleep(pause_file)
         check_wait_counter <- check_wait_counter + 1

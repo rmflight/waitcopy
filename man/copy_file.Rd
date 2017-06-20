@@ -5,7 +5,7 @@
 \title{copy file}
 \usage{
 copy_file(from_file = NULL, to_dir = ".", json_data = NULL,
-  tmp_loc = "/tmp")
+  tmp_loc = "/tmp", clean_file_fun = clean_filename)
 }
 \arguments{
 \item{from_file}{the location of the original file}
@@ -15,6 +15,8 @@ copy_file(from_file = NULL, to_dir = ".", json_data = NULL,
 \item{json_data}{the json meta information data}
 
 \item{tmp_loc}{temp location if you want to specify it}
+
+\item{clean_file_fun}{function used to rename the file}
 }
 \value{
 list
