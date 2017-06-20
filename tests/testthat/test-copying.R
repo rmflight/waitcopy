@@ -74,3 +74,12 @@ test_that("timings work", {
 
 
 })
+
+test_that("warnings appear", {
+  check_files <- dir(file.path(source_dir, c("set1", "set2")), full.names = TRUE)
+  expect_silent(check_files_exist(check_files))
+
+  check_files <- c(check_files, file.path(source_dir, "idontexist.raw"))
+  expect_warning(check_files_exist(check_files), "file list do not exist!")
+
+})
