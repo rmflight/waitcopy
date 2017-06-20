@@ -76,12 +76,28 @@ test_that("timings work", {
   expect_true(difftime(file_copy_date, waitcopy:::get_today_in_local() + beg_time) > 0)
 
   now_minus_today <- difftime(curr_time, curr_today, units = "s")
-  beg_time <- seconds(now_minus_today + 20)
+  beg_time <- seconds(now_minus_today + 50)
   end_time <- seconds(now_minus_today + 3600)
 
+  expect_message(wait_copy(file.path(source_dir, "set1", "file2.raw"),
+                           target_dir2, json_meta = file.path(target_dir2, "all_meta_data.json"),
+                           tmp_loc = tmp_dir2,
+                           start_time = beg_time, stop_time = end_time,
+                           wait_check = 2, n_check = 2),
+                 "Reached maximum number of wait periods")
 
+  now_minus_today <- difftime(curr_time, curr_today, units = "s")
+  beg_time <- seconds(now_minus_today)
+  end_time <- seconds(now_minus_today + 3600)
 
+  all_files <- dir(file.path(source_dir, c("set1", "set2")), pattern = "raw", full.names = TRUE)[2:3]
 
+  expect_message(wait_copy(all_files,
+                           target_dir2, json_meta = file.path(target_dir2, "all_meta_data.json"),
+                           tmp_loc = tmp_dir2,
+                           start_time = beg_time, stop_time = end_time,
+                           wait_files = 1, pause_wait = 2),
+                 "Waiting between sets of files")
 })
 
 test_that("warnings appear", {
