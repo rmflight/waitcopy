@@ -19,6 +19,8 @@ wait_copy(file_list, to_dir = ".", json_meta = "all_meta_data.json",
 
 \item{tmp_loc}{a temp file location}
 
+\item{clean_file_fun}{function to use for cleaning up the file name?}
+
 \item{time_limit}{only copy during a certain time?}
 
 \item{start_time}{when to start copying}
@@ -36,8 +38,6 @@ wait_copy(file_list, to_dir = ".", json_meta = "all_meta_data.json",
 \item{pause_wait}{how long to pause when the wait limit is reached}
 
 \item{pause_file}{how long to pause between every file}
-
-\item{clean_filename}{should the file name be cleaned up?}
 }
 \value{
 logical
@@ -71,7 +71,7 @@ you are passing valid file paths.
 }
 \examples{
 \dontrun{
-  #### Not Run! ####
+
   # assume files are in /home/tmp/
   # assume current working directory is where to copy to
   file_list <- dir(".", full.names = TRUE)
