@@ -60,9 +60,6 @@ copy_file <- function(from_file = NULL, to_dir = ".", json_data = NULL, tmp_loc 
 
   to_dir <- normalizePath(to_dir)
 
-  if (!dir.exists(to_dir)) {
-    dir.create(to_dir)
-  }
 
   base_file <- basename(from_file)
   base_out <- rename_file(base_file)
@@ -212,6 +209,10 @@ wait_copy <- function(file_list, to_dir = ".",
                                wait_files = 10, pause_wait = 10,
                                pause_file = 2){
 
+  if (!dir.exists(to_dir)) {
+    dir.create(to_dir)
+  }
+
   if (file.exists(json_meta)) {
     backup_name <- gsub(".json", paste0("-", gsub(" ", "-", as.character(Sys.time())), ".json"), json_meta)
     file.copy(json_meta, backup_name)
@@ -271,7 +272,7 @@ wait_copy <- function(file_list, to_dir = ".",
 
       } else {
         Sys.sleep(pause_wait)
-        #message("sleeping for a longer time!")
+        message("Waiting between sets of files! ....")
         check_wait_counter <- 0
       }
 
