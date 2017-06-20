@@ -27,3 +27,5 @@ Suggests: knitr,
     covr,
     rprojroot
 VignetteBuilder: knitr
+URL: https://github.com/rmflight/waitcopy
+BugReports: https://github.com/rmflight/waitcopy/issues

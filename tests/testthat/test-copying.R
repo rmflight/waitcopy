@@ -18,7 +18,7 @@ test_that("copying with duplicates works", {
   target_dir <- create_in_temp("target", FALSE)
   tmp_dir <- create_in_temp("temp")
   on.exit({
-    erase(file.path(target_dir));
+    erase(file.path(target_dir))
     erase(file.path(tmp_dir))
   })
 
@@ -54,7 +54,7 @@ test_that("timings work", {
   target_dir2 <- create_in_temp("target2")
   tmp_dir2 <- create_in_temp("temp2")
   on.exit({
-    erase(file.path(target_dir2));
+    erase(file.path(target_dir2))
     erase(file.path(tmp_dir2))
   })
 
