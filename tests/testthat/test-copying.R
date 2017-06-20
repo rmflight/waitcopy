@@ -10,8 +10,9 @@ erase <- function(path) unlink(path, recursive = TRUE)
 
 data("iris")
 
+source_dir <- file.path(rprojroot::find_root("DESCRIPTION"), "tests", "testthat")
+
 test_that("copying with duplicates works", {
-  source_dir <- normalizePath(".")
   target_dir <- create_in_temp("target")
   tmp_dir <- create_in_temp("temp")
   on.exit({
@@ -19,7 +20,7 @@ test_that("copying with duplicates works", {
     erase(file.path(tmp_dir))
   })
 
-  all_files <- dir(source_dir, pattern = "raw", full.names = TRUE, recursive = TRUE)
+  all_files <- dir(file.path(source_dir, c("set1", "set2")), pattern = "raw", full.names = TRUE)
 
   wait_copy(all_files, target_dir, json_meta = file.path(target_dir, "all_meta_data.json"),
                      tmp_loc = tmp_dir, time_limit = FALSE, pause_file = 0)
@@ -55,9 +56,6 @@ test_that("timings work", {
     erase(file.path(tmp_dir2))
   })
 
-  dir.create(file.path(source_dir2, "set_timing"))
-  dput(iris[-1, ], file = file.path(source_dir2, "set_timing", "file1_timing.raw"))
-
   curr_time <- waitcopy:::get_now_in_local()
   curr_today <- waitcopy:::get_today_in_local()
 
@@ -65,13 +63,13 @@ test_that("timings work", {
   beg_time <- seconds(now_minus_today + 20)
   end_time <- seconds(now_minus_today + 3600)
 
-  wait_copy(file.path(source_dir2, "set_timing", "file1_timing.raw"),
+  wait_copy(file.path(source_dir, "set1", "file1.raw"),
             target_dir2, json_meta = file.path(target_dir2, "all_meta_data.json"), tmp_loc = tmp_dir2,
             start_time = beg_time, stop_time = end_time,
             wait_check = 8)
 
-  expect_true(file.exists(file.path(target_dir2, "file1_timing.raw")))
-  file_copy_date <- file.mtime(file.path(target_dir2, "file1_timing.raw"))
+  expect_true(file.exists(file.path(target_dir2, "file1.raw")))
+  file_copy_date <- file.mtime(file.path(target_dir2, "file1.raw"))
   expect_true(difftime(file_copy_date, waitcopy:::get_today_in_local() + beg_time) > 0)
 
 
