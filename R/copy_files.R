@@ -219,7 +219,7 @@ save_json <- function(list_data, save_loc){
 #'
 #' @examples
 #' \dontrun{
-#'   #### Not Run! ####
+#'
 #'   # assume files are in /home/tmp/
 #'   # assume current working directory is where to copy to
 #'   file_list <- dir(".", full.names = TRUE)
