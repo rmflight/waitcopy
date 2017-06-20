@@ -66,7 +66,10 @@ copy_file <- function(from_file = NULL, to_dir = ".", json_data = NULL, tmp_loc 
 
 
   base_file <- basename(from_file)
-  base_out <- clean_file_fun(base_file)
+  if (!is.null(clean_file_fun)) {
+    base_out <- clean_file_fun(base_file)
+  }
+
 
   tmp_file <- file.path(tmp_loc, base_out)
 
