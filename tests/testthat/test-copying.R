@@ -11,28 +11,13 @@ erase <- function(path) unlink(path, recursive = TRUE)
 data("iris")
 
 test_that("copying with duplicates works", {
-  source_dir <- create_in_temp("source")
+  source_dir <- normalizePath(".")
   target_dir <- create_in_temp("target")
   tmp_dir <- create_in_temp("temp")
   on.exit({
-    erase(file.path(source_dir));
     erase(file.path(target_dir));
     erase(file.path(tmp_dir))
   })
-
-  # create some data to work with
-  dir.create(file.path(source_dir, "set1"))
-  # two completely different files
-  dput(iris[, -1], file = file.path(source_dir, "set1", "file1.raw"))
-  dput(iris[, -3], file = file.path(source_dir, "set1", "file2.raw"))
-
-  # and a duplicate in the same directory
-  dput(iris[, -1], file = file.path(source_dir, "set1", "file3.raw"))
-
-  dir.create(file.path(source_dir, "set2"))
-
-  dput(iris[-10, ], file = file.path(source_dir, "set2", "file4.raw"))
-  dput(iris[-3, ], file = file.path(source_dir, "set2", "file2.raw"))
 
   all_files <- dir(source_dir, pattern = "raw", full.names = TRUE, recursive = TRUE)
 
@@ -48,11 +33,6 @@ test_that("copying with duplicates works", {
 
   expect_length(json_metadata[[1]]$original_path, 2)
 
-  # add creating backup and then copy a couple more files
-  dir.create(file.path(source_dir, "set3"))
-  dput(iris[, -1], file = file.path(source_dir, "set3", "file5.raw"))
-  dput(iris[-120, ], file = file.path(source_dir, "set3", "file6.raw"))
-  dput(iris[, -2], file = file.path(source_dir, "set3", "file7.raw"))
 
   new_files <- dir(file.path(source_dir, "set3"), pattern = "raw", full.names = TRUE)
   wait_copy(new_files, target_dir, json_meta = file.path(target_dir, "all_meta_data.json"),
@@ -68,11 +48,9 @@ test_that("copying with duplicates works", {
 })
 
 test_that("timings work", {
-  source_dir2 <- create_in_temp("source2")
   target_dir2 <- create_in_temp("target2")
   tmp_dir2 <- create_in_temp("temp2")
   on.exit({
-    erase(file.path(source_dir2));
     erase(file.path(target_dir2));
     erase(file.path(tmp_dir2))
   })
