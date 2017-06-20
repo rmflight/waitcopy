@@ -178,7 +178,7 @@ save_json <- function(list_data, save_loc){
 #' @param to_dir where to copy the files to
 #' @param json_meta the json meta flat file
 #' @param tmp_loc a temp file location
-#' @param clean_filename should the file name be cleaned up?
+#' @param clean_file_fun function to use for cleaning up the file name?
 #' @param time_limit only copy during a certain time?
 #' @param start_time when to start copying
 #' @param stop_time when to stop copying
