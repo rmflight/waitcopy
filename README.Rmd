@@ -15,6 +15,12 @@ output:
 
 Copy files during particular times of day and with metadata.
 
+## Useful Definitions
+
+- **filepath**: the full path to a given file, eg /home/user/file1.png
+- **basename**: the actual filename of a file path, eg file1.png in /home/user/file1.png
+- **dirname**: the directory portion of a filepath, eg /home/user in /home/user/file1.png
+
 ## Description
 
 Provides the function `wait_copy` that:
@@ -28,7 +34,7 @@ Provides the function `wait_copy` that:
 
 Imagine someone you work with has a hard drive that you need data from, but that
 hard drive is only accessible via the network, mounted via SAMBA, and there are
-potentially duplicate files with the same name, files with the same base name
+potentially duplicate files with the file or base name, files with the same file name
 that are different, and the file path provides some meta-information about the
 sample. In addition, the file names have odd characters in them (spaces, colons, etc)
 that make them a pain to work with from the command line on Linux, so you'd prefer
@@ -65,7 +71,10 @@ Given a file to copy, and a location to copy it to, does a few things:
   
 ## Installation
 
-`devtools::install_github("rmflight/waitcopy")`
+```r
+# install.packages(devtools)
+devtools::install_github("rmflight/waitcopy")
+```
 
 ## Example Usage
 
@@ -77,8 +86,8 @@ the files is duplicated (but we don't know that before we start).
 ```{r get_files}
 library(waitcopy)
 library(lubridate)
-# assuming you are in the package directory
-testloc <- file.path(rprojroot::find_root("DESCRIPTION"), "tests", "testthat", "set1")
+# files are in the extdata directory of waitcopy
+testloc <- system.file("extdata", "set1", package = "waitcopy")
 
 file_list <- dir(testloc, pattern = "raw", full.names = TRUE)
 file_list
