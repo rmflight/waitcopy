@@ -272,6 +272,8 @@ wait_copy <- function(file_list, to_dir = ".",
     json_data <- NULL
   }
 
+  json_md5 <- digest::digest(json_data, "md5")
+
   # check if we've copied some before, and if so we want to remove them so
   # we don't waste time copying them again.
   if (!(length(json_data) == 0)) {
@@ -328,6 +330,12 @@ wait_copy <- function(file_list, to_dir = ".",
       }
 
     } else {
+      # before waiting, we want to check if the meta-data has changed
+      # so we can write it before we sit for a long time again
+      if (digest::digest(json_data, "md5") != json_md5) {
+        save_json(json_data, json_meta)
+        json_md5 <- digest::digest(json_data, "md5")
+      }
       # if we're not allowed, wait some time before trying again.
       message(paste0("Not allowed to copy yet, waiting! .... ", Sys.time()))
       i_check <- i_check + 1
