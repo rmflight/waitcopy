@@ -29,6 +29,7 @@ Suggests: knitr,
     dplyr,
     docopt,
     methods
+    roxygen2
 VignetteBuilder: knitr
 URL: https://github.com/rmflight/waitcopy
 BugReports: https://github.com/rmflight/waitcopy/issues

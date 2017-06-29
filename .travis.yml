@@ -12,7 +12,7 @@ install:
 script:
   - R CMD build .
   - R CMD check --no-tests *tar.gz
-  - Rscript tests/testthat/monitory_files.R -d tests/testthat/target_dir3 -l tests/testthat/log_file.txt -t 120 &
+  - Rscript tests/testthat/monitor_files.R -d tests/testthat/target_dir3 -l tests/testthat/log_file.txt -t 120 &
   - Rscript run_tests.R
 
 after_success:
