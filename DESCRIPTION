@@ -1,6 +1,6 @@
 Package: waitcopy
 Title: Copying files within certain hours and waiting between each one
-Version: 0.9.99
+Version: 1.1.0
 Authors@R: person(given = c("Robert", "M"), family = c("Flight"),
  email = "rflight79@gmail.com", role = c("aut", "cre"))
 Description: Provides convenience functions for copying files when there is
