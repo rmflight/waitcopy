@@ -278,7 +278,7 @@ wait_copy <- function(file_list, to_dir = ".",
   # we don't waste time copying them again.
   if (!(length(json_data) == 0)) {
     #browser()
-    previous_files <- unlist(map(json_data, function(x){x$original_path}))
+    previous_files <- unlist(purrr::map(json_data, function(x){x$original_path}))
 
     file_list <- file_list[!(file_list %in% previous_files)]
   }
@@ -419,15 +419,13 @@ create_master_meta_data <- function(file_dirs = ".", json_meta = "all_meta_data.
     out_list
   })
 
-  json_lengths <- vapply(json_data, length, numeric(1))
+  #json_lengths <- vapply(json_data, length, numeric(1))
 
-  if (file.exists(json_meta) && (unique(json_lengths) > 0)) {
+  if (file.exists(json_meta)) {
     backup_name <- gsub(".json", paste0("-", gsub(" ", "-", as.character(Sys.time())), ".json"), json_meta)
     file.copy(json_meta, backup_name)
   }
 
-  if (unique(json_lengths) > 0) {
-    save_json(json_data, json_meta)
-    message(paste0("Meta-data saved to ", json_meta))
-  }
+  save_json(json_data, json_meta)
+  message(paste0("Meta-data saved to ", json_meta))
 }
