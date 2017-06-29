@@ -71,10 +71,20 @@ Given a file to copy, and a location to copy it to, does a few things:
   
 ## Installation
 
+### Stable Version
+
 ```r
-# install.packages(devtools)
+# install.packages("devtools")
+devtools::install_github("MoseleyBioinformaticsLab/waitcopy")
+```
+
+### Development Version
+
+```r
+# install.packages("devtools")
 devtools::install_github("rmflight/waitcopy")
 ```
+
 
 ## Example Usage
 
