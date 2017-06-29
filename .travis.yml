@@ -8,7 +8,7 @@ cache: packages
 
 install:
   - R -e 'devtools::install_deps(dep = TRUE)'
-  - R CMD INSTALL roxygen2
+  - R -e 'install.packages("roxygen2")'
 
 script:
   - R CMD build .
