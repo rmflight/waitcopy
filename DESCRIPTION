@@ -28,7 +28,7 @@ Suggests: knitr,
     rprojroot,
     dplyr,
     docopt,
-    methods
+    methods,
     roxygen2
 VignetteBuilder: knitr
 URL: https://github.com/rmflight/waitcopy
