@@ -410,7 +410,13 @@ create_master_meta_data <- function(file_dirs = ".", json_meta = "all_meta_data.
   all_json <- dir(normalizePath(file_dirs), recursive = recursive, full.names = TRUE, pattern = "json$")
   json_data <- lapply(all_json, function(x){
     #print(x)
-    jsonlite::fromJSON(x, simplifyVector = FALSE)[[1]]
+    tmp_data <- jsonlite::fromJSON(x, simplifyVector = FALSE)
+    if (length(tmp_data) == 1) {
+      out_list <- tmp_data[[1]]
+    } else {
+      out_list <- tmp_data
+    }
+    out_list
   })
 
   json_lengths <- vapply(json_data, length, numeric(1))
