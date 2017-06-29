@@ -394,3 +394,34 @@ check_files_exist <- function(file_list, n_check = 10){
     warning(paste0(sum(!does_exist), " of ", n_check, " files in your file list do not exist!"))
   }
 }
+
+#' create meta-data
+#'
+#' Given a set of directories to search for JSON meta-data files, remake
+#' a complete meta-data file and save it to the location specified.
+#'
+#' @param file_dirs the directories to search
+#' @param json_meta where to save the new file
+#' @param recursive should they be searched recursively?
+#'
+#' @export
+create_master_meta_data <- function(file_dirs = ".", json_meta = "all_meta_data.json",
+                                    recursive = TRUE){
+  all_json <- dir(normalizePath(file_dirs), recursive = recursive, full.names = TRUE, pattern = "json$")
+  json_data <- lapply(all_json, function(x){
+    #print(x)
+    jsonlite::fromJSON(x, simplifyVector = FALSE)[[1]]
+  })
+
+  json_lengths <- vapply(json_data, length, numeric(1))
+
+  if (file.exists(json_meta) && (unique(json_lengths) > 0)) {
+    backup_name <- gsub(".json", paste0("-", gsub(" ", "-", as.character(Sys.time())), ".json"), json_meta)
+    file.copy(json_meta, backup_name)
+  }
+
+  if (unique(json_lengths) > 0) {
+    save_json(json_data, json_meta)
+    message(paste0("Meta-data saved to ", json_meta))
+  }
+}
