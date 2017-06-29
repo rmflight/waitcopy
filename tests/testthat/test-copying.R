@@ -109,7 +109,15 @@ test_that("warnings appear", {
 
 })
 
+
 test_that("copy before waiting", {
+  skip_on_cran()
+  file.create("target_dir3/dummy")
+  system("Rscript monitor_files.R -d target_dir3 -l log_file.txt -t 40", intern = FALSE, wait = FALSE)
+  Sys.sleep(4)
+  has_log_file <- file.exists("log_file.txt")
+
+  skip_if_not(has_log_file)
   #dir.create("target_dir3")
   tmp_dir3 <- create_in_temp("temp3")
 
@@ -135,17 +143,22 @@ test_that("copy before waiting", {
             wait_check = 4, n_check = 2,
             wait_files = 1, pause_wait = 10)
 
-  if (file.exists("log_file.txt")) {
-    log_data <- read.table("log_file.txt", header = TRUE, sep = "\t", stringsAsFactors = FALSE)
+  # browser(expr = TRUE)
 
-    log_data <- dplyr::filter(log_data, grepl("target_dir3/all_meta_data.json", file))
-    log_data$check_time <- NULL
+  log_data <- read.table("log_file.txt", header = TRUE, sep = "\t", stringsAsFactors = FALSE)
 
-    mtimes <- unique(log_data$mtime)
+  log_data <- dplyr::filter(log_data, grepl("target_dir3/all_meta_data.json", file))
+  #log_data$check_time <- NULL
 
-    expect_equal(length(mtimes), 2)
-    expect_gt(as.numeric(difftime(mtimes[1], curr_time2, units = "s")), 14)
-    expect_gt(as.numeric(difftime(mtimes[2], curr_time2, units = "s")), 18)
-  }
+  mtimes <- unique(log_data$mtime)
+
+  #browser(expr = TRUE)
+  Sys.sleep(20)
+  has_2_mtime <- length(mtimes) == 2
+  skip_if_not(has_2_mtime)
+  expect_equal(length(mtimes), 2)
+  expect_gt(as.numeric(difftime(mtimes[1], curr_time2, units = "s")), 14)
+  expect_gt(as.numeric(difftime(mtimes[2], curr_time2, units = "s")), 18)
+
 
 })

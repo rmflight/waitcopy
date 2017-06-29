@@ -7,6 +7,8 @@
 #
 # capture results of running the test
 
+#devtools::install()
+library(methods)
 test_res <- as.data.frame(devtools::test())
 
 if (sum(test_res$error) > 0) {

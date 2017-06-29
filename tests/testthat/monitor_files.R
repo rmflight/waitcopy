@@ -19,6 +19,7 @@ main <- function(directory = ".", logfile = "log_file.txt", time = 30){
   file_info <- file.info(dir(directory, full.names = TRUE))
   file_info$check_time <- nexttime
   file_info$file <- row.names(file_info)
+  write.table(file_info, row.names = FALSE, col.names = TRUE, file = logfile, sep = "\t")
   while (difftime(nexttime, currtime, units = "s") < time) {
     Sys.sleep(1)
     nexttime <- Sys.time()
