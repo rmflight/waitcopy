@@ -26,6 +26,9 @@ Suggests: knitr,
     testthat,
     covr,
     rprojroot
+    dplyr,
+    docopt,
+    methods
 VignetteBuilder: knitr
 URL: https://github.com/rmflight/waitcopy
 BugReports: https://github.com/rmflight/waitcopy/issues

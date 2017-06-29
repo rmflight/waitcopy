@@ -108,3 +108,44 @@ test_that("warnings appear", {
   expect_warning(check_files_exist(check_files), "file list do not exist!")
 
 })
+
+test_that("copy before waiting", {
+  #dir.create("target_dir3")
+  tmp_dir3 <- create_in_temp("temp3")
+
+  on.exit({
+    erase(dir(file.path("target_dir3"), full.names = TRUE))
+    erase(file.path(tmp_dir3))
+    erase("log_file.txt")
+  })
+
+  curr_time <- waitcopy:::get_now_in_local()
+  curr_time2 <- Sys.time()
+  curr_today <- waitcopy:::get_today_in_local()
+
+  now_minus_today <- difftime(curr_time, curr_today, units = "s")
+  beg_time <- seconds(now_minus_today + 4)
+  end_time <- seconds(now_minus_today + 10)
+
+  all_files <- dir(file.path(source_dir, c("set1", "set2")), pattern = "raw", full.names = TRUE)[2:3]
+
+  wait_copy(all_files,
+            "target_dir3", json_meta = file.path("target_dir3", "all_meta_data.json"), tmp_loc = tmp_dir3,
+            start_time = beg_time, stop_time = end_time,
+            wait_check = 4, n_check = 2,
+            wait_files = 1, pause_wait = 10)
+
+  if (file.exists("log_file.txt")) {
+    log_data <- read.table("log_file.txt", header = TRUE, sep = "\t", stringsAsFactors = FALSE)
+
+    log_data <- dplyr::filter(log_data, grepl("target_dir3/all_meta_data.json", file))
+    log_data$check_time <- NULL
+
+    mtimes <- unique(log_data$mtime)
+
+    expect_equal(length(mtimes), 2)
+    expect_gt(as.numeric(difftime(mtimes[1], curr_time2, units = "s")), 14)
+    expect_gt(as.numeric(difftime(mtimes[2], curr_time2, units = "s")), 18)
+  }
+
+})

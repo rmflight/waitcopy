@@ -4,3 +4,4 @@
 ^codecov\.yml$
 ^README\.Rmd$
 ^data-raw
+^run_tests.R

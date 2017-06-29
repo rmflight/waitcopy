@@ -2,3 +2,7 @@
 .Rhistory
 .RData
 .Ruserdata
+/tests/testthat/target_dir3/file2.json
+/tests/testthat/target_dir3/file2.raw
+/tests/testthat/target_dir3/all_meta_data.json
+/tests/testthat/log_file.txt
