@@ -8,10 +8,12 @@ cache: packages
 
 install:
   - R -e 'devtools::install_deps(dep = TRUE)'
+  - R CMD INSTALL roxygen2
 
 script:
   - R CMD build .
-  - R CMD check --no-tests *tar.gz
+  - PKG_FILE_NAME=$(ls -1t *.tar.gz | head -n 1)
+  - R CMD check --no-tests $PKG_FILE_NAME
   - Rscript tests/testthat/monitor_files.R -d tests/testthat/target_dir3 -l tests/testthat/log_file.txt -t 120 &
   - Rscript run_tests.R
 
