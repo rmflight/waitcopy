@@ -305,7 +305,7 @@ wait_copy <- function(file_list, to_dir = ".",
   check_wait_counter <- 0
   i_check <- 0
   did_copy <- 1
-  while (did_copy <= to_copy) {
+  while ((to_copy > 0) && (did_copy <= to_copy)) {
     now1 <- get_now_in_local()
     now2 <- get_now_in_local()
     tmp_int <- interval(now1, now2, tz(t_stop))
@@ -405,6 +405,8 @@ check_files_exist <- function(file_list, n_check = 10){
 #' @param recursive should they be searched recursively?
 #'
 #' @export
+#'
+#' @return list of meta-data, invisibly
 create_master_meta_data <- function(file_dirs = ".", json_meta = "all_meta_data.json",
                                     recursive = TRUE){
   all_json <- dir(normalizePath(file_dirs), recursive = recursive, full.names = TRUE, pattern = "json$")
@@ -428,4 +430,5 @@ create_master_meta_data <- function(file_dirs = ".", json_meta = "all_meta_data.
 
   save_json(json_data, json_meta)
   message(paste0("Meta-data saved to ", json_meta))
+  invisible(json_data)
 }
