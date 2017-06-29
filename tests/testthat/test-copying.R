@@ -122,7 +122,7 @@ test_that("copy before waiting", {
   tmp_dir3 <- create_in_temp("temp3")
 
   on.exit({
-    erase(dir(file.path("target_dir3"), full.names = TRUE))
+    erase(grep("dummy", dir(file.path("target_dir3"), full.names = TRUE), invert = TRUE, value = TRUE))
     erase(file.path(tmp_dir3))
     erase("log_file.txt")
   })
