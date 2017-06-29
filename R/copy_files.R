@@ -412,13 +412,7 @@ create_master_meta_data <- function(file_dirs = ".", json_meta = "all_meta_data.
   all_json <- dir(normalizePath(file_dirs), recursive = recursive, full.names = TRUE, pattern = "json$")
   json_data <- lapply(all_json, function(x){
     #print(x)
-    tmp_data <- jsonlite::fromJSON(x, simplifyVector = FALSE)
-    if (length(tmp_data) == 1) {
-      out_list <- tmp_data[[1]]
-    } else {
-      out_list <- tmp_data
-    }
-    out_list
+    import_json(x)
   })
 
   #json_lengths <- vapply(json_data, length, numeric(1))
@@ -431,4 +425,22 @@ create_master_meta_data <- function(file_dirs = ".", json_meta = "all_meta_data.
   save_json(json_data, json_meta)
   message(paste0("Meta-data saved to ", json_meta))
   invisible(json_data)
+}
+
+#' import json
+#'
+#' import json from a file correctly given some things where things get written
+#' differently
+#'
+#' @param json_file the json file to read
+#'
+#' @export
+import_json <- function(json_file){
+  json_data <- jsonlite::fromJSON(json_file, simplifyVector = FALSE)
+  if (length(json_data) == 1) {
+    out_list <- json_data[[1]]
+  } else {
+    out_list <- json_data
+  }
+  out_list
 }
