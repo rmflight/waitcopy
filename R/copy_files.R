@@ -407,7 +407,7 @@ check_files_exist <- function(file_list, n_check = 10){
 #' @export
 #'
 #' @return list of meta-data, invisibly
-create_master_meta_data <- function(file_dirs = ".", json_meta = "all_meta_data.json",
+create_master_meta_data <- function(file_dirs = ".", json_meta = NULL,
                                     recursive = TRUE){
   all_json <- dir(normalizePath(file_dirs), recursive = recursive, full.names = TRUE, pattern = "json$")
   json_data <- lapply(all_json, function(x){
@@ -422,8 +422,10 @@ create_master_meta_data <- function(file_dirs = ".", json_meta = "all_meta_data.
     file.copy(json_meta, backup_name)
   }
 
-  save_json(json_data, json_meta)
-  message(paste0("Meta-data saved to ", json_meta))
+  if (!is.null(json_meta)) {
+    save_json(json_data, json_meta)
+    message(paste0("Meta-data saved to ", json_meta))
+  }
   invisible(json_data)
 }
 
