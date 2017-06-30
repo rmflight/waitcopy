@@ -4,7 +4,7 @@
 \alias{create_master_meta_data}
 \title{create meta-data}
 \usage{
-create_master_meta_data(file_dirs = ".", json_meta = "all_meta_data.json",
+create_master_meta_data(file_dirs = ".", json_meta = NULL,
   recursive = TRUE)
 }
 \arguments{
@@ -13,6 +13,9 @@ create_master_meta_data(file_dirs = ".", json_meta = "all_meta_data.json",
 \item{json_meta}{where to save the new file}
 
 \item{recursive}{should they be searched recursively?}
+}
+\value{
+list of meta-data, invisibly
 }
 \description{
 Given a set of directories to search for JSON meta-data files, remake
