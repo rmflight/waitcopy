@@ -60,14 +60,14 @@ Given a file to copy, and a location to copy it to, does a few things:
 * strip special characters and spaces from the file name (if asked)
 * copy the file to a temp location
 * save the original path to the file it was being copied from
-* calculate the MD5 hash of the file
-* check master json data of MD5 hashes and file names
-* if MD5 is new, add the new file name, original file path, and MD5 to the master
+* calculate the SHA-1 hash of the file
+* check master json data of SHA-1 hashes and file names
+* if SHA-1 is new, add the new file name, original file path, and SHA-1 to the master
   json file
-* if MD5 is not new, **add** the original file path to the matching file entry
+* if SHA-1 is not new, **add** the original file path to the matching file entry
   in the master json file.
-* if a matching file name is found but with a different MD5 hash, append the
-  first 8 digits of the MD5 hash to the file name, and add it to the json data
+* if a matching file name is found but with a different SHA-1 hash, append the
+  first 8 digits of the SHA-1 hash to the file name, and add it to the json data
   
 ## Installation
 
