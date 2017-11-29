@@ -464,6 +464,9 @@ update_hashes <- function(json_file) {
   json_metadata <- import_json(json_file)
 
   json_metadata$sha1 <- digest::digest(json_metadata$saved_path, algo = "sha1", file = TRUE)
-  json_metadata$md5 <- NULL
+  if (!is.null(json_metadata$md5)) {
+    json_metadata$md5 <- NULL
+  }
+
   save_json(json_metadata, json_file)
 }
