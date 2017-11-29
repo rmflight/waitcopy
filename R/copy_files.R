@@ -44,15 +44,15 @@ clean_filename <- function(in_file, replace_special = "-"){
 #'
 #' @details We want to keep track of information about the copied files, so this
 #' function does some stuff to help us out. It strips special characters from
-#' the base file name, copies the file to a temp location, calculates the MD5 hash
-#' of the file, checks the JSON meta file for matches to the MD5, and if there
+#' the base file name, copies the file to a temp location, calculates the SHA-1 hash
+#' of the file, checks the JSON meta file for matches to the SHA-1, and if there
 #' are none, copies the renamed file to the copy location.
 #'
-#' If a matching instance of MD5 hashes are found, then the file path is added
+#' If a matching instance of SHA-1 hashes are found, then the file path is added
 #' to the entry for that file location.
 #'
-#' If a matching file name is found but with a different MD5 hash, then the first
-#' 8 characters of the MD5 hash are appended to the file, and it is added to the
+#' If a matching file name is found but with a different SHA-1 hash, then the first
+#' 8 characters of the SHA-1 hash are appended to the file, and it is added to the
 #' database.
 #'
 #' @import digest
@@ -81,18 +81,18 @@ copy_file <- function(from_file = NULL, to_dir = ".", json_data = NULL, tmp_loc 
 
   if (did_copy) {
     add_file <- TRUE
-    md5 <- digest(tmp_file, algo = "md5", file = TRUE)
+    sha1 <- digest(tmp_file, algo = "sha1", file = TRUE)
     if (!is.null(json_data)) {
-      match_md5 <- map_lgl(json_data, function(x){md5 %in% x$md5})
+      match_sha1 <- map_lgl(json_data, function(x){sha1 %in% x$sha1})
       match_file <- map_lgl(json_data, function(x){base_file %in% basename(unlist(x$original_path))})
     } else {
-      match_md5 <- FALSE
+      match_sha1 <- FALSE
       match_file <- FALSE
     }
 
-    if (any(match_md5)) {
+    if (any(match_sha1)) {
       #browser(expr = TRUE)
-      tmp_json <- json_data[[which(match_md5)]]
+      tmp_json <- json_data[[which(match_sha1)]]
 
       # figure out where the individual json file should be saved
       raw_path <- tmp_json$saved_path
@@ -102,14 +102,14 @@ copy_file <- function(from_file = NULL, to_dir = ".", json_data = NULL, tmp_loc 
 
       save_json(tmp_json, json_path)
 
-      json_data[[which(match_md5)]] <- tmp_json
+      json_data[[which(match_sha1)]] <- tmp_json
 
       add_file <- FALSE
     } else if (any(match_file)) {
       fileext <- tools::file_ext(base_out)
       fileext_regex <- paste0(".", fileext, "$")
       base2 <- gsub(fileext_regex, "", base_out)
-      base_out <- paste0(base2, "-", substr(md5, 1, 8), ".", fileext)
+      base_out <- paste0(base2, "-", substr(sha1, 1, 8), ".", fileext)
     }
 
     if (add_file) {
@@ -121,7 +121,7 @@ copy_file <- function(from_file = NULL, to_dir = ".", json_data = NULL, tmp_loc 
           file = base_out,
           saved_path = file_loc,
           original_path = from_file,
-          md5 = md5
+          sha1 = sha1
         )
         json_path <- replace_file_extension(file_loc, ".json")
         save_json(file_data, json_path)
@@ -272,7 +272,7 @@ wait_copy <- function(file_list, to_dir = ".",
     json_data <- NULL
   }
 
-  json_md5 <- digest::digest(json_data, "md5")
+  json_sha1 <- digest::digest(json_data, "sha1")
 
   # check if we've copied some before, and if so we want to remove them so
   # we don't waste time copying them again.
@@ -332,9 +332,9 @@ wait_copy <- function(file_list, to_dir = ".",
     } else {
       # before waiting, we want to check if the meta-data has changed
       # so we can write it before we sit for a long time again
-      if (digest::digest(json_data, "md5") != json_md5) {
+      if (digest::digest(json_data, "sha1") != json_sha1) {
         save_json(json_data, json_meta)
-        json_md5 <- digest::digest(json_data, "md5")
+        json_sha1 <- digest::digest(json_data, "sha1")
       }
       # if we're not allowed, wait some time before trying again.
       message(paste0("Not allowed to copy yet, waiting! .... ", Sys.time()))
