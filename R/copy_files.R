@@ -446,3 +446,24 @@ import_json <- function(json_file){
   }
   out_list
 }
+
+
+#' update hashes
+#'
+#' If you used a previous version of this package that used MD5 hashes and now
+#' need to fix it by changing to SHA-1 hashes, this is your function.
+#'
+#' @param json_file the json file that needs to be modified
+#'
+#' @export
+#'
+#' @return NULL
+#'
+update_hashes <- function(json_file) {
+  file.copy(json_file, paste0(json_file, ".bak"))
+  json_metadata <- import_json(json_file)
+
+  json_metadata$sha1 <- digest::digest(json_metadata$saved_path, algo = "sha1", file = TRUE)
+  json_metadata$md5 <- NULL
+  save_json(json_metadata, json_file)
+}
