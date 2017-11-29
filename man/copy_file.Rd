@@ -27,14 +27,14 @@ Copy a single file from one location to another
 \details{
 We want to keep track of information about the copied files, so this
 function does some stuff to help us out. It strips special characters from
-the base file name, copies the file to a temp location, calculates the MD5 hash
-of the file, checks the JSON meta file for matches to the MD5, and if there
+the base file name, copies the file to a temp location, calculates the SHA-1 hash
+of the file, checks the JSON meta file for matches to the SHA-1, and if there
 are none, copies the renamed file to the copy location.
 
-If a matching instance of MD5 hashes are found, then the file path is added
+If a matching instance of SHA-1 hashes are found, then the file path is added
 to the entry for that file location.
 
-If a matching file name is found but with a different MD5 hash, then the first
-8 characters of the MD5 hash are appended to the file, and it is added to the
+If a matching file name is found but with a different SHA-1 hash, then the first
+8 characters of the SHA-1 hash are appended to the file, and it is added to the
 database.
 }
